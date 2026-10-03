@@ -1,69 +1,154 @@
-import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
-export default function Home() {
+import { EmptyState } from "@/components/empty-state";
+import { Hero } from "@/components/home/hero";
+import { FadeIn, Stagger, StaggerItem } from "@/components/motion/fade-in";
+import { ProjectCard } from "@/components/projects/project-card";
+import { Button } from "@/components/ui/button";
+import { Container, Section, SectionHeader } from "@/components/ui/section";
+import {
+  getExperiences,
+  getFeaturedProjects,
+  getProfile,
+  getPublishedPosts,
+  getPublishedResearch,
+} from "@/src/lib/queries/portfolio";
+
+export default async function HomePage() {
+  const [profile, featuredProjects, experiences, research, posts] =
+    await Promise.all([
+      getProfile().catch(() => null),
+      getFeaturedProjects(3).catch(() => []),
+      getExperiences().catch(() => []),
+      getPublishedResearch().catch(() => []),
+      getPublishedPosts().catch(() => []),
+    ]);
+
+  const latestExperience = experiences[0] ?? null;
+  const latestResearch = research[0] ?? null;
+  const latestPost = posts[0] ?? null;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+    <>
+      <Hero profile={profile} />
+
+      <Section className="border-t border-border/50 pt-0">
+        <Container>
+          <SectionHeader
+            eyebrow="Selected work"
+            title="Featured projects"
+            description="Published projects from the portfolio database."
+          />
+          {featuredProjects.length > 0 ? (
+            <Stagger className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {featuredProjects.map((project) => (
+                <StaggerItem key={project.id}>
+                  <ProjectCard project={project} />
+                </StaggerItem>
+              ))}
+            </Stagger>
+          ) : (
+            <EmptyState
+              title="No featured projects yet"
+              description="Projects marked as featured and published will appear here."
+              actionHref="/projects"
+              actionLabel="Browse projects"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+          )}
+          <FadeIn className="mt-8">
+            <Button render={<Link href="/projects" />} variant="outline">
+              All projects
+              <ArrowRight data-icon="inline-end" />
+            </Button>
+          </FadeIn>
+        </Container>
+      </Section>
+
+      <Section className="border-t border-border/50 bg-surface/40">
+        <Container>
+          <div className="grid gap-8 lg:grid-cols-3">
+            <FadeIn>
+              <p className="mb-2 text-xs font-medium tracking-[0.2em] text-electric uppercase">
+                Experience
+              </p>
+              {latestExperience ? (
+                <>
+                  <h3 className="font-heading text-xl font-medium">
+                    {latestExperience.role}
+                  </h3>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {latestExperience.company}
+                  </p>
+                  <Button
+                    render={<Link href="/experience" />}
+                    variant="link"
+                    className="mt-3 px-0"
+                  >
+                    View timeline
+                  </Button>
+                </>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Experience entries will show here once published.
+                </p>
+              )}
+            </FadeIn>
+            <FadeIn delay={0.08}>
+              <p className="mb-2 text-xs font-medium tracking-[0.2em] text-electric uppercase">
+                Research
+              </p>
+              {latestResearch ? (
+                <>
+                  <h3 className="font-heading text-xl font-medium">
+                    {latestResearch.title}
+                  </h3>
+                  <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">
+                    {latestResearch.abstract}
+                  </p>
+                  <Button
+                    render={<Link href="/research" />}
+                    variant="link"
+                    className="mt-3 px-0"
+                  >
+                    Explore research
+                  </Button>
+                </>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Published research will appear here.
+                </p>
+              )}
+            </FadeIn>
+            <FadeIn delay={0.16}>
+              <p className="mb-2 text-xs font-medium tracking-[0.2em] text-electric uppercase">
+                Writing
+              </p>
+              {latestPost ? (
+                <>
+                  <h3 className="font-heading text-xl font-medium">
+                    {latestPost.title}
+                  </h3>
+                  <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">
+                    {latestPost.excerpt}
+                  </p>
+                  <Button
+                    render={<Link href="/blog" />}
+                    variant="link"
+                    className="mt-3 px-0"
+                  >
+                    Read the blog
+                  </Button>
+                </>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Published posts will appear here.
+                </p>
+              )}
+            </FadeIn>
+          </div>
+        </Container>
+      </Section>
+    </>
   );
 }
