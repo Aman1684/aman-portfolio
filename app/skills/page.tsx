@@ -25,7 +25,7 @@ export default async function SkillsPage() {
 
   return (
     <>
-      <Section>
+      <Section className="pt-14 sm:pt-20">
         <Container>
           <SectionHeader
             eyebrow="Background"
@@ -67,10 +67,13 @@ export default async function SkillsPage() {
               ))}
             </Stagger>
           ) : (
-            <EmptyState
-              title="No education entries"
-              description="Education records will appear here once added."
-            />
+            <article className="grid gap-3 rounded-xl border border-border/70 bg-card/45 p-5 sm:grid-cols-[1fr_auto] sm:items-center sm:p-6">
+              <div>
+                <h3 className="font-heading text-xl font-medium tracking-tight">Indian Institute of Technology Roorkee</h3>
+                <p className="mt-1 text-sm text-muted-foreground">B.Tech. Electrical Engineering</p>
+              </div>
+              <p className="text-sm text-muted-foreground">Expected May 2027</p>
+            </article>
           )}
         </Container>
       </Section>

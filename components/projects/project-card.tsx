@@ -15,9 +15,9 @@ import type { Project } from "@/src/lib/queries/portfolio";
 export function ProjectCard({ project }: { project: Project }) {
   return (
     <Link href={`/projects/${project.slug}`} className="group block h-full">
-      <Card className="h-full bg-card/70 transition-colors ring-border/60 group-hover:ring-electric/40">
+      <Card className="h-full border border-border/70 bg-card/65 shadow-none transition-all duration-300 group-hover:-translate-y-1 group-hover:border-electric/35 group-hover:bg-card/90">
         {project.cover_image ? (
-          <div className="relative aspect-[16/10] overflow-hidden border-b border-border/50">
+          <div className="relative aspect-16/10 overflow-hidden border-b border-border/50 bg-surface">
             <Image
               src={project.cover_image}
               alt={project.title}
@@ -27,7 +27,10 @@ export function ProjectCard({ project }: { project: Project }) {
             />
           </div>
         ) : (
-          <div className="aspect-[16/10] border-b border-border/50 bg-gradient-to-br from-electric/15 via-transparent to-transparent" />
+          <div className="relative flex aspect-16/10 items-end overflow-hidden border-b border-border/50 bg-linear-to-br from-electric/15 via-surface to-background p-5">
+            <div className="pointer-events-none absolute inset-0 opacity-40 bg-[linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.045)_1px,transparent_1px)] bg-size-[32px_32px] mask-[linear-gradient(to_bottom,black,transparent)]" />
+            <span className="relative font-mono text-[10px] tracking-[0.18em] text-foreground/55 uppercase">Project / Case study</span>
+          </div>
         )}
         <CardHeader>
           <div className="mb-2 flex flex-wrap items-center gap-2">
@@ -38,9 +41,9 @@ export function ProjectCard({ project }: { project: Project }) {
               <Badge variant="outline">{project.category}</Badge>
             ) : null}
           </div>
-          <CardTitle className="flex items-start justify-between gap-3 text-lg group-hover:text-electric">
+          <CardTitle className="flex items-start justify-between gap-3 text-lg transition-colors group-hover:text-electric">
             <span>{project.title}</span>
-            <ArrowUpRight className="mt-0.5 size-4 shrink-0 opacity-0 transition-opacity group-hover:opacity-100" />
+            <ArrowUpRight className="mt-0.5 size-4 shrink-0 text-electric opacity-40 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" aria-hidden="true" />
           </CardTitle>
           {project.description ? (
             <CardDescription className="line-clamp-3">

@@ -73,6 +73,47 @@ export type PasswordUpdateState = {
   success?: boolean;
 };
 
+function logPasswordUpdateFailure(error: unknown) {
+  const details: {
+    name?: string;
+    code?: string;
+    status?: number;
+  } = {};
+
+  if (error && typeof error === "object") {
+    const candidate = error as {
+      name?: unknown;
+      code?: unknown;
+      status?: unknown;
+    };
+
+    if (
+      typeof candidate.name === "string" &&
+      /^[a-z][a-z0-9_.-]{0,79}$/i.test(candidate.name)
+    ) {
+      details.name = candidate.name;
+    }
+
+    if (
+      typeof candidate.code === "string" &&
+      /^[a-z0-9_-]{1,80}$/i.test(candidate.code)
+    ) {
+      details.code = candidate.code;
+    }
+
+    if (
+      typeof candidate.status === "number" &&
+      Number.isInteger(candidate.status) &&
+      candidate.status >= 100 &&
+      candidate.status <= 599
+    ) {
+      details.status = candidate.status;
+    }
+  }
+
+  console.error("[admin-password-recovery] auth.updateUser failed", details);
+}
+
 export async function requestAdminPasswordReset(
   _previousState: RecoveryRequestState | undefined,
   formData: FormData,
@@ -129,7 +170,9 @@ export async function updateAdminPassword(
       password: parsed.data.password,
     });
     updateError = error;
-  } catch {
+    if (error) logPasswordUpdateFailure(error);
+  } catch (error) {
+    logPasswordUpdateFailure(error);
     updateError = new Error("Password update failed");
   }
 

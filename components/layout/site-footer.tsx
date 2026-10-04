@@ -8,16 +8,17 @@ export function SiteFooter({ profile }: { profile: Profile | null }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-auto border-t border-border/60 bg-surface/60">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 sm:px-6 lg:px-8">
+    <footer className="mt-auto border-t border-border/60 bg-surface/45">
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="flex flex-col justify-between gap-8 sm:flex-row sm:items-end">
           <div className="space-y-2">
-            <p className="font-heading text-lg font-semibold tracking-tight">
+            <p className="font-heading text-base font-semibold tracking-tight">
               {name}
               <span className="text-electric">.</span>
             </p>
             <p className="max-w-md text-sm text-muted-foreground">
-              {profile?.headline ?? siteConfig.description}
+              {profile?.headline ??
+                "Engineer. Researcher. Builder. Building things that solve interesting problems."}
             </p>
           </div>
           <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
@@ -54,9 +55,10 @@ export function SiteFooter({ profile }: { profile: Profile | null }) {
             </Link>
           </div>
         </div>
-        <p className="text-xs text-muted-foreground/80">
-          © {year} {name}. All rights reserved.
-        </p>
+        <div className="flex flex-col gap-2 border-t border-border/60 pt-5 text-xs text-muted-foreground/75 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {year} {name}</p>
+          <p>B.Tech. Electrical Engineering · IIT Roorkee · Expected May 2027</p>
+        </div>
       </div>
     </footer>
   );

@@ -15,6 +15,7 @@ const contactSchema = z.object({
   email: z.string().trim().email("Enter a valid email").max(200),
   subject: z.string().trim().max(200).optional(),
   message: z.string().trim().min(10, "Message is too short").max(5000),
+  website: z.string().max(200).optional(),
 });
 
 type ContactValues = z.infer<typeof contactSchema>;
@@ -31,6 +32,7 @@ export function ContactForm() {
       email: "",
       subject: "",
       message: "",
+      website: "",
     },
   });
 
@@ -54,6 +56,16 @@ export function ContactForm() {
       className="space-y-4 rounded-xl border border-border/70 bg-card/50 p-5 sm:p-6"
       noValidate
     >
+      <div className="absolute left-[-10000px] top-auto size-px overflow-hidden" aria-hidden="true">
+        <label htmlFor="contact-website">Leave this field empty</label>
+        <Input
+          id="contact-website"
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          {...form.register("website")}
+        />
+      </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <Field
           label="Name"

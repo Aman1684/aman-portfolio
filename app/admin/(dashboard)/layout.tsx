@@ -6,6 +6,19 @@ import { logoutAdmin } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import { requireAdmin } from "@/src/lib/auth/require-admin";
 
+const dashboardNavigation = [
+  ["Overview", "/admin"],
+  ["Projects", "/admin/projects"],
+  ["Experience", "/admin/experience"],
+  ["Education", "/admin/education"],
+  ["Skills", "/admin/skills"],
+  ["Research", "/admin/research"],
+  ["Blog", "/admin/blog"],
+  ["Messages", "/admin/messages"],
+  ["Profile", "/admin/profile"],
+  ["Settings", "/admin/settings"],
+] as const;
+
 export default async function AdminDashboardLayout({
   children,
 }: {
@@ -51,6 +64,15 @@ export default async function AdminDashboardLayout({
           </div>
         </div>
       </header>
+      <nav aria-label="Admin sections" className="border-b border-border/60 bg-background/80">
+        <div className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4 py-2 sm:px-6 lg:px-8">
+          {dashboardNavigation.map(([label, href]) => (
+            <Link key={href} href={href} className="shrink-0 rounded-md px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+              {label}
+            </Link>
+          ))}
+        </div>
+      </nav>
       <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
         {children}
       </main>

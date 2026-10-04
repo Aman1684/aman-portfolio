@@ -20,11 +20,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://aman-portfolio-aman1684.vercel.app"),
   title: {
     default: `${siteConfig.name} — Portfolio`,
     template: `%s — ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  openGraph: {
+    type: "website",
+    siteName: siteConfig.name,
+    title: `${siteConfig.name} — Engineer. Researcher. Builder.`,
+    description: siteConfig.description,
+    url: "https://aman-portfolio-aman1684.vercel.app",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteConfig.name} — Engineer. Researcher. Builder.`,
+    description: siteConfig.description,
+  },
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

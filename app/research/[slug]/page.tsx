@@ -47,8 +47,8 @@ export default async function ResearchDetailPage({
   ].filter((section) => Boolean(section.body));
 
   return (
-    <Section>
-      <Container className="max-w-3xl">
+    <Section className="pt-10 sm:pt-14">
+      <Container className="max-w-5xl">
         <FadeIn>
           <Button
             render={<Link href="/research" />}
@@ -64,7 +64,7 @@ export default async function ResearchDetailPage({
               {item.category}
             </Badge>
           ) : null}
-          <h1 className="font-heading text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
+          <h1 className="max-w-4xl font-heading text-4xl font-semibold tracking-[-0.04em] text-balance sm:text-6xl">
             {item.title}
           </h1>
           <div className="mt-6 flex flex-wrap gap-3">
@@ -124,17 +124,30 @@ export default async function ResearchDetailPage({
           </FadeIn>
         ) : null}
 
-        <div className="mt-12 space-y-10">
-          {sections.map((section, index) => (
-            <FadeIn key={section.title} delay={0.04 * index}>
-              <h2 className="font-heading text-2xl font-medium tracking-tight">
-                {section.title}
-              </h2>
-              <p className="mt-3 whitespace-pre-wrap text-muted-foreground leading-relaxed text-pretty">
-                {section.body}
-              </p>
-            </FadeIn>
-          ))}
+        <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-16">
+          <div className="space-y-10">
+            {sections.map((section, index) => (
+              <FadeIn key={section.title} delay={0.04 * index}>
+                <section aria-labelledby={`research-section-${index}`}>
+                  <p className="mb-2 font-mono text-[10px] tracking-[0.18em] text-electric uppercase">{String(index + 1).padStart(2, "0")}</p>
+                  <h2 id={`research-section-${index}`} className="font-heading text-2xl font-medium tracking-tight">
+                    {section.title}
+                  </h2>
+                  <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-muted-foreground text-pretty sm:text-base">
+                    {section.body}
+                  </p>
+                </section>
+              </FadeIn>
+            ))}
+          </div>
+          <aside className="h-fit rounded-xl border border-border/70 bg-surface/55 p-5 lg:sticky lg:top-24">
+            <p className="text-xs font-medium tracking-[0.16em] text-muted-foreground uppercase">Research details</p>
+            {item.category ? <div className="mt-4"><p className="text-xs text-muted-foreground">Topic</p><p className="mt-1 text-sm font-medium">{item.category}</p></div> : null}
+            {item.technologies.length > 0 ? (
+              <div className="mt-4"><p className="text-xs text-muted-foreground">Methods / tools</p><div className="mt-2 flex flex-wrap gap-1.5">{item.technologies.map((tech) => <Badge key={tech} variant="secondary">{tech}</Badge>)}</div></div>
+            ) : null}
+            <Link href="/research" className="mt-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-electric">All research</Link>
+          </aside>
         </div>
       </Container>
     </Section>

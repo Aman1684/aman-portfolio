@@ -1,8 +1,7 @@
 export const siteConfig = {
   name: "Aman Kumar",
   shortName: "Aman",
-  description:
-    "Software engineer portfolio — projects, experience, research, and writing.",
+  description: "Engineer. Researcher. Builder. Building things that solve interesting problems.",
   nav: [
     { href: "/about", label: "About" },
     { href: "/projects", label: "Projects" },
